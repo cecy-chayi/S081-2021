@@ -14,13 +14,15 @@ void freerange(void *pa_start, void *pa_end);
 extern char end[]; // first address after kernel.
                    // defined by kernel.ld.
 
+// list node
 struct run {
   struct run *next;
 };
 
+// list for free page
 struct {
   struct spinlock lock;
-  struct run *freelist;
+  struct run *freelist; // free page list head
 } kmem;
 
 void
@@ -79,4 +81,18 @@ kalloc(void)
   if(r)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
+}
+
+uint64
+count_free_mem(void)
+{
+  acquire(&kmem.lock);
+  uint64 mem_bytes = 0;
+  struct run *r = kmem.freelist;
+  while(r) {
+    mem_bytes += PGSIZE;
+    r = r->next;
+  }
+  release(&kmem.lock);
+  return mem_bytes;
 }

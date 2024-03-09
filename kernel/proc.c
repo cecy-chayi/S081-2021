@@ -668,3 +668,18 @@ procdump(void)
     printf("\n");
   }
 }
+
+int
+pgaccess(uint64 addr, int page_num, uint64 abits_addr) {
+  pagetable_t pagetable = myproc()->pagetable;
+  int res = 0;
+  for(int i = 0; i < page_num; i++) {
+    pte_t *pte =  walk(pagetable, addr + (uint64)PGSIZE * i, 0);
+    if(pte && (*pte & PTE_A)) {
+      res |= 1 << i;
+      *pte ^= PTE_A;
+    }
+  }
+  copyout(pagetable, abits_addr, (char*)&res, sizeof(int));
+  return 0;
+}

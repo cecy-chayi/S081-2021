@@ -1,0 +1,22 @@
+1. Which registers contain arguments to functions? For example, which register holds 13 in main's call to printf?
+f: x in a0
+g: x in a0, and optimize at compile time, we will see function g doesn't call function f in asm
+main: 13 in a2, 12 in a1.
+
+2. Where is the call to funciton f in the assembly code for main? Where is the call to g?(Hint: the compiler may inline functions.)
+because of the inline functions, funciton f is "li	a1,12", function g doesn't exist.
+
+3. At what address is the function printf located? 
+0x628
+
+4. What value is in the register ra just after the jalr to printf in main?
+0x38
+
+5. Run the following code.
+	unsigned int i = 0x00646c72;
+	printf("H%x Wo%s", 57616, &i);
+little-endian: HE110 World  (57616 == 0xE110, 0x72=r. 0x6c=l, 0x64=d)
+big   -endian: unsigned int i = 0x726c6400;
+
+6. In the following code, what is going to be printed after 'y='? Why does it happen?
+depend on register a2

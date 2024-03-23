@@ -104,5 +104,9 @@ struct proc {
   struct context context;      // swtch() here to run process
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
+  int ticks;
+  int passed_ticks;
+  uint64 timing_fn;
+  struct trapframe *alarm_trapframe_backup;
   char name[16];               // Process name (debugging)
 };
